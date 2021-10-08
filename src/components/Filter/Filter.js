@@ -2,22 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Filter.module.css';
 import { connect } from 'react-redux';
-import actions from '../../redux/phonebook/phonebookActions';
+import * as actions from '../../redux/phonebook/phonebookActions';
+import { getContacts, getFilter } from 'redux/phonebook/phonebookSelectors';
+import { CSSTransition } from 'react-transition-group';
 
-function Filter({ filter, onChange }) {
+function Filter({ contacts, filter, onChange }) {
   return (
-    <input
-      type="text"
-      value={filter}
-      onChange={onChange}
-      placeholder="Найти"
-      className={s.input}
-    ></input>
+    <CSSTransition
+      in={contacts.length > 1}
+      timeout={250}
+      classNames="Filter"
+      unmountOnExit
+    >
+      <input
+        type="text"
+        value={filter}
+        onChange={onChange}
+        placeholder="Найти"
+        className={s.input}
+      ></input>
+    </CSSTransition>
   );
 }
 
 const mapStateToProps = state => ({
-  filter: state.phonebook.filter,
+  contacts: getContacts(state),
+  filter: getFilter(state),
 });
 
 const mapDispatchToProps = dispatch => ({

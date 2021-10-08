@@ -1,45 +1,48 @@
-import React from 'react';
+import { React, Component } from 'react';
 import './App.css';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import Container from './components/Container/Container';
 import Form from './components/Form/Form';
 import ContactsList from './components/ContactsList/ContactsList';
 import Filter from './components/Filter/Filter';
-import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
+import { fetchContacts } from 'redux/phonebook/phonebookOperations';
+import Title from 'components/Title/Title';
+import { getError } from 'redux/phonebook/phonebookSelectors';
+import Alert from 'components/Alert/Alert';
 
-function App({ contacts }) {
-  return (
-    <Container>
-      <div className="phoneBook">
-        <CSSTransition
-          in={true}
-          appear={true}
-          timeout={500}
-          classNames="Title"
-          unmountOnExit
-        >
-          <h1>Контакты</h1>
-        </CSSTransition>
+class App extends Component {
+  componentDidMount() {
+    this.props.fetchContacts();
+  }
 
-        <Form />
+  render() {
+    const { onError } = this.props;
 
-        <CSSTransition
-          in={contacts.length > 1}
-          timeout={250}
-          classNames="Filter"
-          unmountOnExit
-        >
+    return (
+      <Container>
+        <div className="phoneBook">
+          <Title />
+
+          <Form />
+
           <Filter />
-        </CSSTransition>
 
-        <ContactsList />
-      </div>
-    </Container>
-  );
+          <ContactsList />
+
+          {onError && <Alert massage={onError.message} alert={onError} />}
+        </div>
+      </Container>
+    );
+  }
 }
 
 const mapStateToProps = state => ({
-  contacts: state.phonebook.contacts,
+  onError: getError(state),
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  fetchContacts: () => dispatch(fetchContacts()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

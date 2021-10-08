@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import s from './Form.module.css';
-import phonebookActions from '../../redux/phonebook/phonebookActions';
-import { CSSTransition } from 'react-transition-group';
+import { addContact } from '../../redux/phonebook/phonebookOperations';
 import Alert from 'components/Alert/Alert';
+import { getContacts } from 'redux/phonebook/phonebookSelectors';
 
 class Form extends Component {
   state = {
@@ -20,26 +20,24 @@ class Form extends Component {
     });
   };
 
+  onAlert = text => {
+    this.setState({
+      massage: text,
+      alert: true,
+    });
+    setTimeout(() => {
+      this.setState({ massage: '', alert: false });
+    }, 3000);
+  };
+
   onSubmitForm = e => {
     e.preventDefault();
     if (this.state.name === '') {
-      this.setState({
-        massage: 'Пожалуйста, введите имя и телефон',
-        alert: true,
-      });
-      setTimeout(() => {
-        this.setState({ massage: '', alert: false });
-      }, 3000);
+      this.onAlert('Пожалуйста, введите имя и телефон');
       return;
     }
     if (this.props.contacts.find(({ name }) => name === this.state.name)) {
-      this.setState({
-        massage: `Контакт ${this.state.name} уже существует`,
-        alert: true,
-      });
-      setTimeout(() => {
-        this.setState({ massage: '', alert: false });
-      }, 3000);
+      this.onAlert(`Контакт ${this.state.name} уже существует`);
       return;
     }
     this.props.handleSubmit(this.state);
@@ -47,16 +45,11 @@ class Form extends Component {
   };
 
   render() {
+    const { massage, alert } = this.state;
     return (
       <>
-        <CSSTransition
-          in={this.state.alert}
-          timeout={250}
-          classNames={s}
-          unmountOnExit
-        >
-          <Alert massage={this.state.massage} />
-        </CSSTransition>
+        <Alert massage={massage} alert={alert} />
+
         <form className={s.form} onSubmit={this.onSubmitForm}>
           <label>
             <input
@@ -87,11 +80,10 @@ class Form extends Component {
   }
 }
 const mapStateToProps = state => ({
-  contacts: state.phonebook.contacts,
+  contacts: getContacts(state),
 });
 const mapDispatchToProps = dispatch => ({
-  handleSubmit: ({ name, number }) =>
-    dispatch(phonebookActions.addContact(name, number)),
+  handleSubmit: ({ name, number }) => dispatch(addContact(name, number)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Form);

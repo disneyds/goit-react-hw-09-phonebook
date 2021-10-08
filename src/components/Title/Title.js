@@ -1,20 +1,29 @@
-import PropTypes from 'prop-types';
-import { Box, Slide, Typography } from '@material-ui/core';
+import Loader from 'components/Loader/Loader';
+import React from 'react';
+import { connect } from 'react-redux';
+import { CSSTransition } from 'react-transition-group';
+import { getLoadind } from 'redux/phonebook/phonebookSelectors';
+import s from './Title.module.css';
 
-const Title = ({ text }) => {
+function Title({ onLoading }) {
   return (
-    <Slide direction="right" in={true} mountOnEnter unmountOnExit>
-      <Typography color="primary" component="h1" variant="h4">
-        <Box ml={3} mt={3} mb={3}>
-          {text}
-        </Box>
-      </Typography>
-    </Slide>
+    <div className={s.wrapper}>
+      <CSSTransition
+        in={true}
+        appear={true}
+        timeout={500}
+        classNames="Title"
+        unmountOnExit
+      >
+        <h1 className={s.title}>Контакты</h1>
+      </CSSTransition>
+      {onLoading && <Loader />}
+    </div>
   );
-};
+}
 
-Title.propTypes = {
-  text: PropTypes.string.isRequired,
-};
+const mapStateToProps = state => ({
+  onLoading: getLoadind(state),
+});
 
-export default Title;
+export default connect(mapStateToProps)(Title);

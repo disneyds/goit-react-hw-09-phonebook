@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import {
   fetchContactRequest,
   fetchContactSuccess,
@@ -10,12 +9,9 @@ import {
   deleteContactRequest,
   deleteContactSuccess,
   deleteContactError,
-  editContactRequest,
-  editContactSuccess,
-  editContactError,
 } from './phonebookActions';
 
-axios.defaults.baseURL = 'https://goit-phonebook-api.herokuapp.com';
+axios.defaults.baseURL = 'http://localhost:2332';
 
 export const fetchContacts = () => dispatch => {
   dispatch(fetchContactRequest());
@@ -27,7 +23,6 @@ export const fetchContacts = () => dispatch => {
     })
     .catch(error => {
       dispatch(fetchContactError(error));
-      if (error.response.status === 404) toast.info('Тут ещё нет контактов.');
     });
 };
 
@@ -46,8 +41,6 @@ export const addContact = (name, number) => dispatch => {
     })
     .catch(error => {
       dispatch(addContactError(error));
-      if (error.response.status === 400)
-        toast.warn('Неудалось создать контакт. Попробуйте ещё раз!');
     });
 };
 
@@ -61,22 +54,5 @@ export const deleteContact = id => dispatch => {
     })
     .catch(error => {
       dispatch(deleteContactError(error));
-      if (error.response.status === 404)
-        toast.warn('Контакт уже удалён, попробуйте перезайти!');
     });
-};
-
-export const editContact = ({ id, name, number }) => async dispatch => {
-  dispatch(editContactRequest());
-
-  try {
-    await axios.patch(`/contacts/${id}`, { name, number });
-    dispatch(editContactSuccess());
-  } catch (error) {
-    dispatch(editContactError(error));
-    if (error.response.status === 404)
-      toast.warn('Контакт уже обновлён, попробуйте перезайти!');
-    if (error.response.status === 401)
-      toast.warn('Что-то пошло не так, попробуйте перезайти!');
-  }
 };

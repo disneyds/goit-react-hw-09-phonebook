@@ -1,16 +1,18 @@
 {
-  "name": "goit-react-hw-06-phonebook",
+  "name": "goit-react-hw-07-phonebook",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://disneyds.github.io/goit-react-hw-06-phonebook",
+  "homepage": "https://disneyds.github.io/goit-react-hw-07-phonebook",
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
+    "axios": "^0.21.1",
     "gh-pages": "^3.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-loader-spinner": "^4.0.0",
     "react-redux": "^7.2.2",
     "react-scripts": "4.0.1",
     "react-transition-group": "^4.4.1",
@@ -25,7 +27,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "server": "json-server --port 2332 --delay 300 --watch db.json"
   },
   "eslintConfig": {
     "extends": [
