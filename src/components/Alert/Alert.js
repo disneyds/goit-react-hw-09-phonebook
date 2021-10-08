@@ -1,10 +1,10 @@
 import React from 'react';
 import s from './Alert.module.css';
 
-export default function Alert({ name }) {
+export default function Alert({ massage }) {
   return (
     <div className={s.alert}>
-      <span>Такой контакт уже существует</span>
+      <span>{massage}</span>
     </div>
   );
 }

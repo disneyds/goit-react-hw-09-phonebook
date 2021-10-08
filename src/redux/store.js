@@ -1,16 +1,19 @@
-// import logger from 'redux-logger';
+import logger from 'redux-logger';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import phonebookReducer from './phonebook/phonebookReducer';
-import authReducer from './auth/authReducer';
+import { saveContacts } from '../services/localData';
 
-const middleware = [...getDefaultMiddleware()];
+const middleware = [...getDefaultMiddleware(), logger];
 const store = configureStore({
   reducer: {
     phonebook: phonebookReducer,
-    auth: authReducer,
   },
   middleware,
   devTools: process.env.NODE_ENV === 'development',
+});
+
+store.subscribe(() => {
+  saveContacts(store.getState().phonebook.contacts);
 });
 
 export default store;
