@@ -8,14 +8,22 @@ import Filter from './components/Filter/Filter';
 
 export default class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const parsedContacts = JSON.parse(localStorage.getItem('numbers'));
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts.length !== prevState.contacts.length) {
+      localStorage.setItem('numbers', JSON.stringify(this.state.contacts));
+    }
+  }
 
   handleSubmitForm = contact => {
     const { contacts } = this.state;
@@ -74,9 +82,9 @@ export default class App extends Component {
     return (
       <Container>
         <div className="phoneBook">
-          <h1>Телефонная книга</h1>
+          <h1>Контакты</h1>
           <Form handleSubmit={this.handleSubmitForm} />
-          <h2>Контакты</h2>
+
           {this.state.contacts.length > 1 && (
             <Filter
               filter={this.state.filter}

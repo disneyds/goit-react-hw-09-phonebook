@@ -5,6 +5,7 @@
   border-radius: 6px;
   margin-bottom: 10px;
   padding: 0 20px;
+  box-sizing: border-box;
   transition: all ease 100ms;
 }
 

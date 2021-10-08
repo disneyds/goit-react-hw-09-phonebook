@@ -44,7 +44,7 @@ export default class Form extends Component {
           ></input>
         </label>
         <button type="submit" className={s.button}>
-          Создать контикт
+          Создать контакт
         </button>
       </form>
     );
