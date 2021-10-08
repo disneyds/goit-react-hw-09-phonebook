@@ -48,3 +48,18 @@
 .delete {
   font-size: 20px;
 }
+
+.enter {
+  transform: translateX(-50%) scale(2);
+}
+.enterActive {
+  transform: translateX(0) scale(1);
+  transition: all 250ms ease;
+}
+.exit {
+  transform: translateX(0) scale(1);
+}
+.exitActive {
+  transform: translateX(50%) scale(0.1);
+  transition: all 250ms ease;
+}

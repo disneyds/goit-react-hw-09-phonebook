@@ -5,11 +5,14 @@ import { v4 as uuid } from 'uuid';
 import Form from './components/Form/Form';
 import ContactsList from './components/ContactsList/ContactsList';
 import Filter from './components/Filter/Filter';
+import { CSSTransition } from 'react-transition-group';
+import Alert from 'components/Alert/Alert';
 
 export default class App extends Component {
   state = {
     contacts: [],
     filter: '',
+    alert: false,
   };
 
   componentDidMount() {
@@ -34,7 +37,10 @@ export default class App extends Component {
     }
 
     if (contacts.find(({ name }) => name === contact.name)) {
-      alert(`${contact.name} уже существует`);
+      this.setState({ alert: true });
+      setTimeout(() => {
+        this.setState({ alert: false });
+      }, 3000);
       return;
     }
 
@@ -81,16 +87,37 @@ export default class App extends Component {
     const visibleConatacts = this.visibleConatacts();
     return (
       <Container>
+        <CSSTransition
+          in={this.state.alert}
+          timeout={250}
+          classNames="Alert"
+          unmountOnExit
+        >
+          <Alert />
+        </CSSTransition>
         <div className="phoneBook">
-          <h1>Контакты</h1>
+          <CSSTransition
+            in={true}
+            appear={true}
+            timeout={500}
+            classNames="Title"
+            unmountOnExit
+          >
+            <h1>Контакты</h1>
+          </CSSTransition>
           <Form handleSubmit={this.handleSubmitForm} />
 
-          {this.state.contacts.length > 1 && (
+          <CSSTransition
+            in={this.state.contacts.length > 1}
+            timeout={250}
+            classNames="Filter"
+            unmountOnExit
+          >
             <Filter
               filter={this.state.filter}
               handleFilterChange={this.handleFilterChange}
             />
-          )}
+          </CSSTransition>
           <ContactsList contacts={visibleConatacts} onDelete={this.onDelete} />
         </div>
       </Container>

@@ -1,26 +1,29 @@
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import s from './ContactsList.module.css';
 import defImg from './defAvaCir.png';
 export default function ContactsList({ contacts, onDelete }) {
   return (
-    <ul className={s.list}>
+    <TransitionGroup component="ul" className={s.list}>
       {contacts.map(({ name, number, id }) => (
-        <li key={id} className={s.contact}>
-          <img src={defImg} className={s.avatar} alt="avatar" />
-          <div className={s.discription}>
-            <span className={s.name}>{name} </span>
-            <span className={s.number}> {number} </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => onDelete(id)}
-            className={s.button}
-          >
-            <p className={s.delete}>&#9940;</p>
-          </button>
-        </li>
+        <CSSTransition key={id} timeout={250} classNames={s}>
+          <li className={s.contact}>
+            <img src={defImg} className={s.avatar} alt="avatar" />
+            <div className={s.discription}>
+              <span className={s.name}>{name} </span>
+              <span className={s.number}> {number} </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => onDelete(id)}
+              className={s.button}
+            >
+              <p className={s.delete}>&#9940;</p>
+            </button>
+          </li>
+        </CSSTransition>
       ))}
-    </ul>
+    </TransitionGroup>
   );
 }
 
