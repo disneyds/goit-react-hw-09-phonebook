@@ -1,37 +1,26 @@
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-import { getVisibleConatacts } from 'redux/phonebook/phonebookSelectors';
-import ContactItem from './ContactItem';
-import { Grid, makeStyles } from '@material-ui/core';
-
-const styles = makeStyles({
-  list: {
-    listStyle: 'none',
-    padding: '0',
-  },
-});
-
-export default function ContactsList() {
-  const s = styles();
-  const contacts = useSelector(getVisibleConatacts);
+import s from './ContactsList.module.css';
+import defImg from './defAvaCir.png';
+export default function ContactsList({ contacts, onDelete }) {
   return (
-    <>
-      {contacts.length > 0 && (
-        <Grid
-          container
-          component="ul"
-          justify="center"
-          alignItems="center"
-          className={s.list}
-        >
-          {contacts.map(({ name, number, id }) => (
-            <Grid item xs={12} key={id} component="li">
-              <ContactItem name={name} number={number} id={id} />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-    </>
+    <ul className={s.list}>
+      {contacts.map(({ name, number, id }) => (
+        <li key={id} className={s.contact}>
+          <img src={defImg} className={s.avatar} alt="avatar" />
+          <div className={s.discription}>
+            <span className={s.name}>{name} </span>
+            <span className={s.number}> {number} </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => onDelete(id)}
+            className={s.button}
+          >
+            <p className={s.delete}>&#9940;</p>
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -43,5 +32,4 @@ ContactsList.propTypes = {
       number: PropTypes.string.isRequired,
     }).isRequired,
   ),
-  filter: PropTypes.string,
 };
