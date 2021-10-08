@@ -10,6 +10,9 @@ import {
   deleteContactRequest,
   deleteContactSuccess,
   deleteContactError,
+  editContactRequest,
+  editContactSuccess,
+  editContactError,
   changeFilter,
 } from './phonebookActions';
 
@@ -43,6 +46,9 @@ const loading = createReducer(initialState.phonebook.loading, {
   [deleteContactRequest]: () => true,
   [deleteContactSuccess]: () => false,
   [deleteContactError]: () => false,
+  [editContactRequest]: () => true,
+  [editContactSuccess]: () => false,
+  [editContactError]: () => false,
 });
 
 const error = createReducer(initialState.phonebook.error, {

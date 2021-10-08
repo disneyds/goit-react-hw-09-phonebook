@@ -1,15 +1,20 @@
 import { AppBar } from '@material-ui/core';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { getIsAuth } from 'redux/auth/authSelectors';
 import AuthNav from './AuthNav/AuthNav';
 import UserMenu from './UserMenu/UserMenu';
 
-export default function Header() {
-  const isAuth = useSelector(getIsAuth);
+function Header({ isAuth }) {
   return (
     <AppBar position="sticky" color="inherit">
       {isAuth ? <UserMenu /> : <AuthNav />}
     </AppBar>
   );
 }
+
+const mapStateToProps = state => ({
+  isAuth: getIsAuth(state),
+});
+
+export default connect(mapStateToProps)(Header);

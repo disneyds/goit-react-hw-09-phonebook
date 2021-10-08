@@ -1,26 +1,24 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { getIsAuth, getToken } from 'redux/auth/authSelectors';
+import { connect } from 'react-redux';
+import { getIsAuth } from 'redux/auth/authSelectors';
 
-export default function PrivateRoute({
+const PrivateRoute = ({
   component: Component,
+  isAuth,
   redirectTo,
   ...routeProps
-}) {
-  const isAuth = useSelector(getIsAuth);
-  const token = useSelector(getToken);
+}) => (
+  <Route
+    {...routeProps}
+    render={props =>
+      isAuth ? <Component {...props} /> : <Redirect to={redirectTo} />
+    }
+  />
+);
 
-  return (
-    <Route
-      {...routeProps}
-      render={props =>
-        isAuth || token ? (
-          <Component {...props} />
-        ) : (
-          <Redirect to={redirectTo} />
-        )
-      }
-    />
-  );
-}
+const mapStateToProps = state => ({
+  isAuth: getIsAuth(state),
+});
+
+export default connect(mapStateToProps)(PrivateRoute);

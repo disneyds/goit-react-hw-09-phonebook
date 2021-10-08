@@ -1,15 +1,11 @@
 import { Avatar, Box, Button, Grid, Typography } from '@material-ui/core';
 import { ExitToApp } from '@material-ui/icons';
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { connect } from 'react-redux';
 import { logout } from 'redux/auth/authOperations';
 import { getUserName } from 'redux/auth/authSelectors';
 
-export default function UserMenu({ avatar }) {
-  const dispatch = useDispatch();
-  const name = useSelector(getUserName);
-  const onLogout = useCallback(() => dispatch(logout()), [dispatch]);
-
+function UserMenu({ name, avatar, onLogout }) {
   return (
     <>
       <Box p={3}>
@@ -29,3 +25,13 @@ export default function UserMenu({ avatar }) {
     </>
   );
 }
+
+const mapStateToProps = state => ({
+  name: getUserName(state),
+});
+
+const mapDispatchToProps = {
+  onLogout: logout,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);

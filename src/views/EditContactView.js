@@ -2,11 +2,10 @@ import { LinearProgress } from '@material-ui/core';
 import ContactEdit from 'components/ContactEdit/ContactEdit';
 import Title from 'components/Title/Title';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getLoadind } from 'redux/phonebook/phonebookSelectors';
+import { connect } from 'react-redux';
+import { getContacts, getLoadind } from 'redux/phonebook/phonebookSelectors';
 
-export default function EditContactView() {
-  const contactLoading = useSelector(getLoadind);
+const EditContactView = ({ contactLoading }) => {
   return (
     <>
       {contactLoading && <LinearProgress />}
@@ -14,4 +13,11 @@ export default function EditContactView() {
       <ContactEdit />
     </>
   );
-}
+};
+
+const mapStateToProps = state => ({
+  contactLoading: getLoadind(state),
+  contacts: getContacts(state),
+});
+
+export default connect(mapStateToProps)(EditContactView);

@@ -1,12 +1,9 @@
 import { Box, Button, ButtonGroup } from '@material-ui/core';
 import paths from 'components/Routes/paths';
 import React from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { withRouter } from 'react-router';
 
-export default function Auth() {
-  const history = useHistory();
-  const { pathname } = useLocation();
-
+function Auth({ history, location: { pathname } }) {
   return (
     <Box p={3}>
       <ButtonGroup
@@ -38,3 +35,5 @@ export default function Auth() {
     </Box>
   );
 }
+
+export default withRouter(Auth);

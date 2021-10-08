@@ -1,35 +1,34 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import s from './ContactsList.module.css';
-import defImg from './defAvaCir.png';
-import { deleteContact } from '../../redux/phonebook/phonebookOperations';
 import { getVisibleConatacts } from 'redux/phonebook/phonebookSelectors';
+import ContactItem from './ContactItem';
+import { Grid, makeStyles } from '@material-ui/core';
 
-function ContactsList({ contacts, onDelete }) {
+const styles = makeStyles({
+  list: {
+    listStyle: 'none',
+    padding: '0',
+  },
+});
+
+function ContactsList({ contacts }) {
+  const s = styles();
   return (
     <>
       {contacts.length > 0 && (
-        <TransitionGroup component="ul" className={s.list}>
+        <Grid
+          container
+          component="ul"
+          justify="center"
+          alignItems="center"
+          className={s.list}
+        >
           {contacts.map(({ name, number, id }) => (
-            <CSSTransition key={id} timeout={250} classNames={s}>
-              <li className={s.contact}>
-                <img src={defImg} className={s.avatar} alt="avatar" />
-                <div className={s.discription}>
-                  <span className={s.name}>{name} </span>
-                  <span className={s.number}> {number} </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => onDelete(id)}
-                  className={s.button}
-                >
-                  <p className={s.delete}>&#9940;</p>
-                </button>
-              </li>
-            </CSSTransition>
+            <Grid item xs={12} key={id} component="li">
+              <ContactItem name={name} number={number} id={id} />
+            </Grid>
           ))}
-        </TransitionGroup>
+        </Grid>
       )}
     </>
   );
@@ -39,11 +38,7 @@ const mapStateToProps = state => ({
   contacts: getVisibleConatacts(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  onDelete: id => dispatch(deleteContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
+export default connect(mapStateToProps)(ContactsList);
 
 ContactsList.propTypes = {
   contacts: PropTypes.arrayOf(

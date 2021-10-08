@@ -3,26 +3,38 @@ import ContactsList from 'components/ContactsList/ContactsList';
 import Filter from 'components/Filter/Filter';
 import Form from 'components/Form/Form';
 import Title from 'components/Title/Title';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { getLoading } from 'redux/auth/authSelectors';
 import { fetchContacts } from 'redux/phonebook/phonebookOperations';
 import { getLoadind } from 'redux/phonebook/phonebookSelectors';
 
-export default function PhonebookView() {
-  const dispatch = useDispatch();
-  const contactLoading = useSelector(getLoadind);
-  const isLoading = useSelector(getLoading);
-  useEffect(() => dispatch(fetchContacts()), [dispatch]);
+class PhonebookView extends Component {
+  componentDidMount() {
+    this.props.fetchContacts();
+  }
 
-  return (
-    <>
-      {isLoading && <LinearProgress />}
-      <Title text="Контакты" />
-      <Form />
-      <Filter />
-      {contactLoading && <LinearProgress />}
-      <ContactsList />
-    </>
-  );
+  render() {
+    return (
+      <>
+        {this.props.isLoading && <LinearProgress />}
+        <Title text="Контакты" />
+        <Form />
+        <Filter />
+        {this.props.contactLoading && <LinearProgress />}
+        <ContactsList />
+      </>
+    );
+  }
 }
+
+const mapStateToProps = state => ({
+  isLoading: getLoading(state),
+  contactLoading: getLoadind(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchContacts: () => dispatch(fetchContacts()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PhonebookView);

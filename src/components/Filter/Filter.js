@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import s from './Filter.module.css';
 import { connect } from 'react-redux';
-import * as actions from '../../redux/phonebook/phonebookActions';
 import { getContacts, getFilter } from 'redux/phonebook/phonebookSelectors';
 import { CSSTransition } from 'react-transition-group';
+import { Box, Paper, TextField } from '@material-ui/core';
+import { changeFilter } from 'redux/phonebook/phonebookActions';
 
 function Filter({ contacts, filter, onChange }) {
   return (
@@ -14,13 +14,18 @@ function Filter({ contacts, filter, onChange }) {
       classNames="Filter"
       unmountOnExit
     >
-      <input
-        type="text"
-        value={filter}
-        onChange={onChange}
-        placeholder="Найти"
-        className={s.input}
-      ></input>
+      <Paper elevation={3}>
+        <Box p={3} mt={1} mb={1}>
+          <TextField
+            fullWidth
+            label="Найти"
+            variant="filled"
+            type="text"
+            onChange={onChange}
+            value={filter}
+          />
+        </Box>
+      </Paper>
     </CSSTransition>
   );
 }
@@ -31,7 +36,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onChange: e => dispatch(actions.changeFilter(e.target.value)),
+  onChange: e => dispatch(changeFilter(e.target.value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

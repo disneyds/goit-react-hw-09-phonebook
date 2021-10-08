@@ -12,18 +12,12 @@ import {
 } from '@material-ui/core';
 import { ContactPhone, Delete, Edit } from '@material-ui/icons';
 import paths from 'components/Routes/paths';
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router';
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { deleteContact } from 'redux/phonebook/phonebookOperations';
 
-export default function ContactItem({ name, number, id }) {
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const onDelete = useCallback(() => dispatch(deleteContact(id)), [
-    dispatch,
-    id,
-  ]);
+function ContactItem({ name, number, onDelete, id, history }) {
   return (
     <>
       <Slide in={true} direction="left" mountOnEnter unmountOnExit>
@@ -72,3 +66,9 @@ export default function ContactItem({ name, number, id }) {
     </>
   );
 }
+
+const mapDispatchToProps = dispatch => ({
+  onDelete: id => dispatch(deleteContact(id)),
+});
+
+export default connect(null, mapDispatchToProps)(withRouter(ContactItem));

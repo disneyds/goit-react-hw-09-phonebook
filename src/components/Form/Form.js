@@ -1,43 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import s from './Form.module.css';
 import { addContact } from '../../redux/phonebook/phonebookOperations';
-import Alert from 'components/Alert/Alert';
 import { getContacts } from 'redux/phonebook/phonebookSelectors';
+import { Box, Button, Grid, Paper, TextField } from '@material-ui/core';
+import InputMask from 'react-input-mask';
 
 class Form extends Component {
   state = {
     name: '',
     number: '',
-    alert: false,
-    massage: '',
+    enterName: false,
+    enterNumber: false,
   };
 
   handleChange = e => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
     this.setState({
-      [name]: value,
+      [id]: value,
+      enterName: false,
+      enterNumber: false,
     });
-  };
-
-  onAlert = text => {
-    this.setState({
-      massage: text,
-      alert: true,
-    });
-    setTimeout(() => {
-      this.setState({ massage: '', alert: false });
-    }, 3000);
   };
 
   onSubmitForm = e => {
     e.preventDefault();
-    if (this.state.name === '') {
-      this.onAlert('Пожалуйста, введите имя и телефон');
+    const { name, number } = this.state;
+    if (name === '') {
+      this.setState(() => ({ enterName: true }));
       return;
     }
-    if (this.props.contacts.find(({ name }) => name === this.state.name)) {
-      this.onAlert(`Контакт ${this.state.name} уже существует`);
+    if (number === '') {
+      this.setState(() => ({ enterNumber: true }));
       return;
     }
     this.props.handleSubmit(this.state);
@@ -45,36 +38,63 @@ class Form extends Component {
   };
 
   render() {
-    const { massage, alert } = this.state;
+    const { name, number, enterName, enterNumber } = this.state;
     return (
       <>
-        <Alert massage={massage} alert={alert} />
+        <Paper elevation={3}>
+          <Box p={3} mt={1} mb={1}>
+            <form onSubmit={this.onSubmitForm}>
+              <Grid container spacing={2} justify="center" alignItems="center">
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="name"
+                    label="Name"
+                    variant="filled"
+                    type="text"
+                    onChange={this.handleChange}
+                    value={name}
+                    error={enterName}
+                    helperText={enterName && 'Введите имя'}
+                  />
+                </Grid>
 
-        <form className={s.form} onSubmit={this.onSubmitForm}>
-          <label>
-            <input
-              type="text"
-              name="name"
-              onChange={this.handleChange}
-              value={this.state.name}
-              placeholder="Имя"
-              className={s.input}
-            ></input>
-          </label>
-          <label>
-            <input
-              type="tel"
-              name="number"
-              onChange={this.handleChange}
-              value={this.state.number}
-              placeholder="Телефон"
-              className={s.input}
-            ></input>
-          </label>
-          <button type="submit" className={s.button}>
-            Создать контакт
-          </button>
-        </form>
+                <Grid item xs={12}>
+                  <InputMask
+                    mask="+38 (999) 99-99-999"
+                    value={number}
+                    onChange={this.handleChange}
+                    disabled={false}
+                    maskChar=" "
+                  >
+                    {() => (
+                      <TextField
+                        fullWidth
+                        id="number"
+                        label="Number"
+                        variant="filled"
+                        type="tel"
+                        error={enterNumber}
+                        helperText={enterNumber && 'Введите номер'}
+                      />
+                    )}
+                  </InputMask>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    type="submit"
+                    color="primary"
+                  >
+                    Создать контакт
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Box>
+        </Paper>
       </>
     );
   }
